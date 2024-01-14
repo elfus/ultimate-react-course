@@ -2,6 +2,18 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles.css";
 
+const skillList = [
+  { skill: "C++", level: "advanced", color: "#2662EA" },
+  { skill: "C", level: "advanced", color: "#2662EA" },
+  { skill: "JavaScript", level: "beginner", color: "#FF3B00" },
+  { skill: "Python", level: "intermediate", color: "#E84F33" },
+  { skill: "BASH", level: "intermediate", color: "#E84F33" },
+  { skill: "SQL", level: "intermediate", color: "#E84F33" },
+  { skill: "PL/SQL", level: "beginner", color: "#FF3B00" },
+  { skill: "Git", level: "intermediate", color: "#E84F33" },
+  { skill: "Yocto", level: "intermediate", color: "#E84F33" },
+];
+
 function Avatar({ file }) {
   return <img className="avatar" src={file} alt={file} />;
 }
@@ -21,46 +33,28 @@ function Intro({ name }) {
   );
 }
 
-function Skill({ skillName, bgColor, emoji }) {
+function Skill({ skillObj }) {
   return (
-    <li className="skill" style={{ backgroundColor: bgColor }}>
-      {skillName} {emoji}
+    <li className="skill" style={{ backgroundColor: skillObj.color }}>
+      {skillObj.skill}
+      {skillObj.level === "beginner" && " 👶"}
+      {skillObj.level === "intermediate" && " 👍"}
+      {skillObj.level === "advanced" && " 💪"}
     </li>
   );
 }
 
 function SkillList({ skillList }) {
-  const map = new Map([
-    ["advanced", ["green", "💪"]],
-    ["medium", ["orangered", "👍"]],
-    ["beginner", ["orange", "👶"]],
-  ]);
-
   return (
     <ul className="skill-list">
       {skillList.map((skill) => {
-        const [name, level] = skill;
-        const [color, emoji] = map.get(level);
-        return (
-          <Skill key={name} skillName={name} bgColor={color} emoji={emoji} />
-        );
+        return <Skill key={skill.skill} skillObj={skill} />;
       })}
     </ul>
   );
 }
 
 function App() {
-  const skillList = [
-    ["C++", "advanced"],
-    ["C", "advanced"],
-    ["JavaScript", "beginner"],
-    ["Python", "medium"],
-    ["BASH", "medium"],
-    ["SQL", "medium"],
-    ["PL/SQL", "beginner"],
-    ["Git", "medium"],
-    ["Yocto", "medium"],
-  ];
   return (
     <div className="card">
       <Avatar file="adrian.jpg" />
