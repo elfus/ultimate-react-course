@@ -10,57 +10,58 @@ function App() {
 }
 
 function Counter() {
-  const [labelStep, setLabelStep] = useState(1);
-  const [labelCount, setLabelCount] = useState(0);
+  const [step, setStep] = useState(1);
+  const [count, setCount] = useState(0);
+
+  function handleOnClickReset() {
+    setStep(1);
+    setCount(0);
+  }
+
   let newDate = new Date();
-  newDate.setDate(newDate.getDate() + labelCount);
+  newDate.setDate(newDate.getDate() + count);
 
   let prepend;
-  if (labelCount === 0) {
+  if (count === 0) {
     prepend = "Today is";
-  } else if (labelCount < 0) {
-    prepend = `${Math.abs(labelCount)} day${
-      labelCount < -1 ? "s" : ""
-    } ago was`;
+  } else if (count < 0) {
+    prepend = `${Math.abs(count)} day${count < -1 ? "s" : ""} ago was`;
   } else {
-    prepend = `${labelCount} from today is`;
+    prepend = `${count} from today is`;
   }
 
   return (
     <div className="center">
-      <MiniCounter
-        name="Step"
-        number={labelStep}
-        setLabel={setLabelStep}
-        step={1}
-      />
-      <MiniCounter
-        name="Count"
-        number={labelCount}
-        setLabel={setLabelCount}
-        step={labelStep}
-      />
+      <div className="center">
+        <input
+          type="range"
+          min="0"
+          max="10"
+          value={step}
+          onChange={(e) => setStep(Number(e.target.value))}
+        />
+        <span>{step}</span>
+      </div>
+
+      <div className="center">
+        <button onClick={() => setCount(count - 1 * step)}>-</button>
+        <input
+          type="text"
+          placeholder="Item..."
+          value={count}
+          onChange={(e) => setCount(Number(e.target.value))}
+        />
+        <button onClick={() => setCount(count + 1 * step)}>+</button>
+      </div>
+
       <span>
         {prepend} {newDate.toDateString()}
       </span>
-    </div>
-  );
-}
-
-function MiniCounter({ name, number, setLabel, step }) {
-  function handleDecrease() {
-    setLabel(() => number - 1 * step);
-  }
-  function handleIncrease() {
-    setLabel(() => number + 1 * step);
-  }
-  return (
-    <div className="center">
-      <button onClick={handleDecrease}>-</button>
-      <span>
-        {name}: {number}
-      </span>
-      <button onClick={handleIncrease}>+</button>
+      {(count !== 0 || step !== 1) && (
+        <div>
+          <button onClick={handleOnClickReset}>RESET</button>
+        </div>
+      )}
     </div>
   );
 }
