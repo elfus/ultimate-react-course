@@ -1,105 +1,86 @@
 import { useState } from "react";
+import "./styles.css";
+
 function App() {
-  const [amount, setAmount] = useState("");
-  const [userRating, setUserRating] = useState("dissatisfied");
-  const [friendRating, setFriendRating] = useState("dissatisfied");
+  return (
+    <div>
+      <TipCalculator />
+    </div>
+  );
+}
 
-  function handleAmountChange(e) {
-    const newAmount = Number(e.target.value);
-    if (!newAmount) {
-      setAmount("");
-      return;
-    }
-    setAmount(newAmount);
-    console.log(newAmount);
-  }
+function TipCalculator() {
+  const [bill, setBill] = useState("");
+  const [percentage1, setPercentage1] = useState(0);
+  const [percentage2, setPercentage2] = useState(0);
 
-  function handleRatingChange(rating) {
-    setUserRating(rating);
-  }
+  const tip = bill * ((percentage1 + percentage2) / 2 / 100);
 
   function handleReset() {
-    setAmount("");
-    setUserRating("dissatisfied");
-    setFriendRating("dissatisfied");
+    setBill("");
+    setPercentage1(0);
+    setPercentage2(0);
   }
 
   return (
     <div>
-      <Bill amount={amount} onHandleAmountChange={handleAmountChange} />
-      <SelectPercentage
-        serviceRating={userRating}
-        onChangeRating={handleRatingChange}
-      >
+      <BillInput bill={bill} onSetBill={setBill} />
+      <SelectPercentage percentage={percentage1} onSelect={setPercentage1}>
         <b>How did you like the service?</b>
       </SelectPercentage>
-      <SelectPercentage
-        serviceRating={friendRating}
-        onChangeRating={setFriendRating}
-      >
+      <SelectPercentage percentage={percentage2} onSelect={setPercentage2}>
         <b>How did your friend like the service?</b>
       </SelectPercentage>
       <br />
-      {amount ? (
-        <>
-          <Total
-            billAmount={amount}
-            userRating={userRating}
-            friendRating={friendRating}
-          />
-          <button onClick={handleReset}>Reset</button>
-        </>
-      ) : null}
+      {bill && <Output bill={bill} tip={tip} />}
+      {bill && <Reset onReset={handleReset} />}
     </div>
   );
 }
 
-function Bill({ amount, onHandleAmountChange }) {
+function BillInput({ bill, onSetBill }) {
   return (
     <div>
-      <span>
-        <b>How much was the bill?</b>
-      </span>
-      <input type="text" value={amount} onChange={onHandleAmountChange} />
+      <label>
+        <b>How much was the Bill?</b>
+      </label>
+      <input
+        type="text"
+        placeholder="Bill value"
+        value={bill}
+        onChange={(e) => onSetBill(Number(e.target.value))}
+      />
     </div>
   );
 }
 
-function SelectPercentage({ serviceRating, onChangeRating, children }) {
+function SelectPercentage({ percentage, onSelect, children }) {
   return (
     <div>
-      <span>{children}</span>
+      <label>{children}</label>
       <select
-        value={serviceRating}
-        onChange={(e) => onChangeRating(e.target.value)}
+        value={percentage}
+        onChange={(e) => onSelect(Number(e.target.value))}
       >
-        <option value="dissatisfied">Dissatisfied (0%)</option>
-        <option value="okay">It was okay (5%)</option>
-        <option value="good">It was good (10%)</option>
-        <option value="amazing">Absolutely amazing! (20%)</option>
+        <option value="0">Dissatisfied (0%)</option>
+        <option value="5">It was okay (5%)</option>
+        <option value="10">It was good (10%)</option>
+        <option value="20">Absolutely amazing! (20%)</option>
       </select>
     </div>
   );
 }
 
-function Total({ billAmount, userRating, friendRating }) {
-  function getTipFromRating(rating) {
-    if (rating === "dissatisfied") return 0;
-    if (rating === "okay") return 0.05;
-    if (rating === "good") return 0.1;
-    if (rating === "amazing") return 0.2;
-  }
-
-  const userTip = getTipFromRating(userRating);
-  const friendTip = getTipFromRating(friendRating);
-  const tipAvg = (userTip + friendTip) / 2;
-  const realTip = Math.round(billAmount * tipAvg);
-
+function Output({ bill, tip }) {
   return (
-    <h1>
-      You pay ${billAmount + realTip} (${billAmount} + ${realTip} tip)
-    </h1>
+    <h3>
+      You pay ${bill + tip} (${bill} + ${tip} tip)
+    </h3>
   );
+}
+
+function Reset({ onReset }) {
+  return <button onClick={onReset}>Reset</button>;
 }
 
 export default App;
