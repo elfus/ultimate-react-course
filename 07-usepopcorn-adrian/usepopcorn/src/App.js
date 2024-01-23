@@ -61,6 +61,17 @@ export default function App() {
       </NavBar>
 
       <Main>
+        {/* This is a second way of doing component composition */}
+        {/* <Box element={<MovieList movies={movies} />} />
+        <Box
+          element={
+            <>
+              <WatchedSummary watched={watched} />
+              <WatchedMovieList watched={watched} />
+            </>
+          }
+        /> */}
+
         <Box>
           <MovieList movies={movies} />
         </Box>
