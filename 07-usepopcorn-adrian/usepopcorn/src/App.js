@@ -54,7 +54,7 @@ const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
 export default function App() {
-  const [query, setQuery] = useState("inception");
+  const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -62,22 +62,22 @@ export default function App() {
   const [selectedId, setSelectedId] = useState(null);
 
   // useEffect runs after the browser paint logic
-  useEffect(function () {
-    console.log("A: After initial render");
-  }, []);
-  useEffect(function () {
-    console.log("B: After every render");
-  });
+  // useEffect(function () {
+  //   console.log("A: After initial render");
+  // }, []);
+  // useEffect(function () {
+  //   console.log("B: After every render");
+  // });
 
-  useEffect(
-    function () {
-      console.log("D");
-    },
-    [query]
-  );
+  // useEffect(
+  //   function () {
+  //     console.log("D");
+  //   },
+  //   [query]
+  // );
 
-  // Component logic runs first
-  console.log("C: During render");
+  // // Component logic runs first
+  // console.log("C: During render");
 
   function handleSelectMovie(id) {
     setSelectedId((selectedId) => (id === selectedId ? null : id));
@@ -112,10 +112,9 @@ export default function App() {
 
           const data = await res.json();
           if (data.Response === "False") throw new Error("Movie not found");
-          console.log(data.Search);
+
           setMovies(data.Search);
         } catch (err) {
-          console.log(err.message);
           if (err.name !== "AbortError") setError(err.message);
           setError("");
         } finally {
@@ -127,6 +126,8 @@ export default function App() {
         setError("");
         return;
       }
+
+      handleCloseMovie();
       fetchMovies();
 
       return function () {
@@ -338,6 +339,22 @@ function MovieDetails({ selectedId, watched, onCloseMovie, onAddWatched }) {
 
   useEffect(
     function () {
+      function callback(e) {
+        if (e.code === "Escape") {
+          onCloseMovie();
+        }
+      }
+      document.addEventListener("keydown", callback);
+
+      return function () {
+        document.removeEventListener("keydown", callback);
+      };
+    },
+    [onCloseMovie]
+  );
+
+  useEffect(
+    function () {
       async function getMovieDetails() {
         setIsLoading(true);
         const res = await fetch(
@@ -359,7 +376,6 @@ function MovieDetails({ selectedId, watched, onCloseMovie, onAddWatched }) {
 
       return function () {
         document.title = "usePopcorn";
-        console.log(`Clean up effect for movie ${title}`);
       };
     },
     [title]
