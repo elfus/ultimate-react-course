@@ -13,7 +13,7 @@ const formatDate = (date) =>
 function CityItem({ city }) {
   const { cityName, emoji, date, id, position } = city;
   return (
-    <li className={styles.cityItem}>
+    <li>
       <Link
         className={styles.cityItem}
         to={`${id}?lat=${position.lat}&lng=${position.lng}`}
