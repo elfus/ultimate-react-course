@@ -34,7 +34,7 @@ function CitiesProvider({ children }) {
       const data = await res.json();
       setCurrentCity(data);
     } catch (error) {
-      alert(`Error while fetching cities {error}`);
+      alert(`Error while fetching cities ${error}`);
     } finally {
       setIsLoading(false);
     }
