@@ -13,8 +13,6 @@ function CityList() {
       <Message message="Add your first city by clicking a city on the map" />
     );
 
-  console.error(`Hello`);
-
   return (
     <ul className={styles.cityList}>
       {cities.map((city) => (
