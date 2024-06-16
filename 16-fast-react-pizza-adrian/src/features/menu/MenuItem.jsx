@@ -2,8 +2,8 @@ import PropTypes from "prop-types";
 import { formatCurrency } from "../../utils/helpers";
 
 function MenuItem({ pizza }) {
-  const { id, name, unitPrice, ingredients, soldOut, imageUrl } = pizza;
-  console.log(id);
+  const { name, unitPrice, ingredients, soldOut, imageUrl } = pizza;
+
   return (
     <li>
       <img src={imageUrl} alt={name} />
