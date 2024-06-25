@@ -1,0 +1,170 @@
+From cb410b25f04389b2bffb3d1932d80d642bf57ab3 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Adri=C3=A1n=20Ortega?= <adrianog.sw@gmail.com>
+Date: Mon, 24 Jun 2024 19:04:41 -0600
+Subject: [PATCH] Section 23: Tailwind CSS Crash Course
+
+Video 301: Using CSS Grid
+---
+ .../src/features/cart/Cart.jsx                |  9 +++++--
+ .../src/features/order/CreateOrder.jsx        | 25 +++++++++++--------
+ .../src/ui/AppLayout.jsx                      | 20 ++++++++-------
+ 16-fast-react-pizza-adrian/src/ui/Header.jsx  |  2 +-
+ 4 files changed, 33 insertions(+), 23 deletions(-)
+
+diff --git a/16-fast-react-pizza-adrian/src/features/cart/Cart.jsx b/16-fast-react-pizza-adrian/src/features/cart/Cart.jsx
+index d53bb320..cb45e317 100644
+--- a/16-fast-react-pizza-adrian/src/features/cart/Cart.jsx
++++ b/16-fast-react-pizza-adrian/src/features/cart/Cart.jsx
+@@ -1,4 +1,4 @@
+-import { Link } from "react-router-dom";
++import { Link } from 'react-router-dom';
+ 
+ // const fakeCart = [
+ //   {
+@@ -29,7 +29,12 @@ function Cart() {
+ 
+   return (
+     <div>
+-      <Link to="/menu">&larr; Back to menu</Link>
++      <Link
++        to="/menu"
++        className="text-sm text-blue-500 hover:text-blue-600 hover:underline"
++      >
++        &larr; Back to menu
++      </Link>
+ 
+       <h2>Your cart, %NAME%</h2>
+ 
+diff --git a/16-fast-react-pizza-adrian/src/features/order/CreateOrder.jsx b/16-fast-react-pizza-adrian/src/features/order/CreateOrder.jsx
+index 8f9f8113..0b31751e 100644
+--- a/16-fast-react-pizza-adrian/src/features/order/CreateOrder.jsx
++++ b/16-fast-react-pizza-adrian/src/features/order/CreateOrder.jsx
+@@ -1,32 +1,32 @@
+ // import { useState } from "react";
+ 
+-import { Form, redirect, useActionData, useNavigation } from "react-router-dom";
+-import { createOrder } from "../../services/apiRestaurant";
++import { Form, redirect, useActionData, useNavigation } from 'react-router-dom';
++import { createOrder } from '../../services/apiRestaurant';
+ 
+ // https://uibakery.io/regex-library/phone-number
+ const isValidPhone = (str) =>
+   /^\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}$/.test(
+-    str
++    str,
+   );
+ 
+ const fakeCart = [
+   {
+     pizzaId: 12,
+-    name: "Mediterranean",
++    name: 'Mediterranean',
+     quantity: 2,
+     unitPrice: 16,
+     totalPrice: 32,
+   },
+   {
+     pizzaId: 6,
+-    name: "Vegetale",
++    name: 'Vegetale',
+     quantity: 1,
+     unitPrice: 13,
+     totalPrice: 13,
+   },
+   {
+     pizzaId: 11,
+-    name: "Spinach and Mushroom",
++    name: 'Spinach and Mushroom',
+     quantity: 1,
+     unitPrice: 15,
+     totalPrice: 15,
+@@ -36,7 +36,7 @@ const fakeCart = [
+ function CreateOrder() {
+   // const [withPriority, setWithPriority] = useState(false);
+   const navigation = useNavigation();
+-  const isSubmitting = navigation.state === "submitting";
++  const isSubmitting = navigation.state === 'submitting';
+ 
+   const formErrors = useActionData();
+ 
+@@ -81,8 +81,11 @@ function CreateOrder() {
+ 
+         <div>
+           <input type="hidden" name="cart" value={JSON.stringify(cart)} />
+-          <button disabled={isSubmitting}>
+-            {isSubmitting ? "Placing order..." : "Order now"}
++          <button
++            disabled={isSubmitting}
++            className="inline-block rounded-full bg-yellow-400 px-4 py-3 font-semibold uppercase tracking-wide text-stone-800 transition-colors duration-300 hover:bg-yellow-300 focus:outline-none focus:ring focus:ring-yellow-300 focus:ring-offset-2 disabled:cursor-not-allowed"
++          >
++            {isSubmitting ? 'Placing order...' : 'Order now'}
+           </button>
+         </div>
+       </Form>
+@@ -97,13 +100,13 @@ export async function action({ request }) {
+   const order = {
+     ...data,
+     cart: JSON.parse(data.cart),
+-    priority: data.priority === "on",
++    priority: data.priority === 'on',
+   };
+   // console.log(order);
+   const errors = {};
+   if (!isValidPhone(order.phone))
+     errors.phone =
+-      "Please give us your correct number. We might need it to contact you.";
++      'Please give us your correct number. We might need it to contact you.';
+ 
+   if (Object.keys(errors).length > 0) return errors;
+ 
+diff --git a/16-fast-react-pizza-adrian/src/ui/AppLayout.jsx b/16-fast-react-pizza-adrian/src/ui/AppLayout.jsx
+index f6dc2298..11cf77b3 100644
+--- a/16-fast-react-pizza-adrian/src/ui/AppLayout.jsx
++++ b/16-fast-react-pizza-adrian/src/ui/AppLayout.jsx
+@@ -1,19 +1,21 @@
+-import { Outlet, useNavigation } from "react-router-dom";
+-import CartOverview from "../features/cart/CartOverview";
+-import Header from "./Header";
+-import Loader from "./Loader";
++import { Outlet, useNavigation } from 'react-router-dom';
++import CartOverview from '../features/cart/CartOverview';
++import Header from './Header';
++import Loader from './Loader';
+ 
+ function AppLayout() {
+   const navigation = useNavigation();
+-  const isLoading = navigation.state === "loading";
++  const isLoading = navigation.state === 'loading';
+ 
+   return (
+-    <div className="layout">
++    <div className="grid h-screen grid-rows-[auto_1fr_auto]">
+       {isLoading && <Loader />}
+       <Header />
+-      <main>
+-        <Outlet />
+-      </main>
++      <div className="overflow-scroll">
++        <main className="mx-auto max-w-3xl">
++          <Outlet />
++        </main>
++      </div>
+       <CartOverview />
+     </div>
+   );
+diff --git a/16-fast-react-pizza-adrian/src/ui/Header.jsx b/16-fast-react-pizza-adrian/src/ui/Header.jsx
+index afd76fe4..9ce374f5 100644
+--- a/16-fast-react-pizza-adrian/src/ui/Header.jsx
++++ b/16-fast-react-pizza-adrian/src/ui/Header.jsx
+@@ -4,7 +4,7 @@ import Username from '../features/user/Username';
+ 
+ function Header() {
+   return (
+-    <header className="flex items-center justify-between border-b border-stone-200 bg-yellow-500 px-4 py-3 uppercase sm:px-6">
++    <header className="flex items-center justify-between border-b border-stone-200 bg-yellow-400 px-4 py-3 uppercase sm:px-6">
+       <Link to="/" className="tracking-widest">
+         Fast React Pizza Co.
+       </Link>
+-- 
+2.40.1
+
