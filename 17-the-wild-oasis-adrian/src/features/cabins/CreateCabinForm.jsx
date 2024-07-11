@@ -50,7 +50,7 @@ const Error = styled.span`
 function CreateCabinForm() {
   const { register, handleSubmit, reset, getValues, formState } = useForm();
   const { errors } = formState;
-  console.log(errors);
+
   const queryClient = useQueryClient();
 
   const { mutate, isLoading: isCreating } = useMutation({
@@ -66,7 +66,7 @@ function CreateCabinForm() {
   });
 
   function onSubmit(data) {
-    mutate(data);
+    mutate({ data, image: data.image[0] });
   }
 
   function onError(errors) {
@@ -136,18 +136,21 @@ function CreateCabinForm() {
         />
       </FormRow>
 
-      <FormRow2>
-        <Label htmlFor="image">Cabin photo</Label>
-        <FileInput id="image" accept="image/*" />
-      </FormRow2>
+      <FormRow label="Cabin photo">
+        <FileInput
+          id="image"
+          accept="image/*"
+          {...register("image", { required: "This field is required" })}
+        />
+      </FormRow>
 
-      <FormRow2>
+      <FormRow>
         {/* type is an HTML attribute! */}
         <Button variation="secondary" type="reset">
           Cancel
         </Button>
-        <Button disabled={isCreating}>Edit cabin</Button>
-      </FormRow2>
+        <Button disabled={isCreating}>Add cabin</Button>
+      </FormRow>
     </Form>
   );
 }
