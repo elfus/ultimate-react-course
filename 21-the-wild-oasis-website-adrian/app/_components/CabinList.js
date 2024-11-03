@@ -1,7 +1,13 @@
 import { getCabins } from "../_lib/data-service";
 import CabinCard from "./CabinCard";
+import { unstable_noStore as noStore } from "next/cache";
 
 async function CabinList() {
+  // noStore would opt out this compoent from caching
+  // this is still experimental and has not been fully
+  // implemented
+  // noStore();
+
   console.log("Starting...");
   // CHANGE
   const cabins = await getCabins();

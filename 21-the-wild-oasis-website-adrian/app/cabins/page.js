@@ -2,6 +2,11 @@ import { Suspense } from "react";
 import CabinList from "../_components/CabinList";
 import Spinner from "../_components/Spinner";
 
+// Revalidation at the page level
+// This needs to be assigned a constant value and not an expression
+export const revalidate = 3600;
+// export const revalidate = 15;
+
 export const metadata = {
   title: "Cabins",
 };
