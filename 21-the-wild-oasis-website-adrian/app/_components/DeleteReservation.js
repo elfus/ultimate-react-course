@@ -1,11 +1,11 @@
 "use client";
 
 import { TrashIcon } from "@heroicons/react/24/solid";
-import { deleteReservation } from "../_lib/actions";
+
 import { useTransition } from "react";
 import SpinnerMini from "./SpinnerMini";
 
-function DeleteReservation({ bookingId }) {
+function DeleteReservation({ bookingId, onDelete }) {
   // This is also possible and would make this function
   // a server action, however we want all our actions
   // centralized in a single place
@@ -18,7 +18,7 @@ function DeleteReservation({ bookingId }) {
 
   function handleDelete() {
     if (confirm("Are you sure you want to delete this reserveration?"))
-      startTransition(() => deleteReservation(bookingId));
+      startTransition(() => onDelete(bookingId));
   }
 
   return (
