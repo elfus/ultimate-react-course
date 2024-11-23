@@ -12,6 +12,7 @@ import { useReservation } from "./ReservationContext";
 
 function isAlreadyBooked(range, datesArr) {
   return (
+    range &&
     range.from &&
     range.to &&
     datesArr.some((date) =>
@@ -45,11 +46,11 @@ function DateSelector({ settings, cabin, bookedDates }) {
         mode="range"
         onSelect={setRange}
         selected={displayRange}
-        min={minBookingLength + 1}
+        min={minBookingLength}
         max={maxBookingLength}
         fromMonth={new Date()}
         fromDate={new Date()}
-        toYear={new Date().getFullYear() + 5}
+        toYear={new Date().getFullYear() + 1}
         captionLayout="dropdown"
         numberOfMonths={2}
         disabled={(curDate) => {
@@ -86,7 +87,7 @@ function DateSelector({ settings, cabin, bookedDates }) {
           ) : null}
         </div>
 
-        {range.from || range.to ? (
+        {range && (range.from || range.to) ? (
           <button
             className="border border-primary-800 py-2 px-4 text-sm font-semibold"
             onClick={() => resetRange()}
