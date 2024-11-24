@@ -2,9 +2,13 @@ import CabinList from "@/components/CabinList";
 import { getCabins } from "@/lib/data-service";
 
 // Statically generated (SSG)
+// Data will be fetched only once at build time on the server
 export async function getStaticProps() {
   const cabins = await getCabins();
-  return { props: { cabins } };
+  // by using revalidate we could implement ISR
+  // Incremental Static Regeneration
+  // a mix of SSG and SSR (statically and dynamic)
+  return { props: { cabins }, revalidate: 3600 };
 }
 export default function Cabins({ cabins }) {
   console.log(cabins);
